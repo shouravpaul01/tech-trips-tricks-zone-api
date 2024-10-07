@@ -3,8 +3,8 @@ import { catchAsync } from "../../utils/catchAsync";
 import { sendResponse } from "../../utils/sendResponse";
 import { AuthServices } from "./auth.service";
 
-const signin=catchAsync(async(req,res)=>{
-    const result =await AuthServices.signinDB(req.body)
+const login=catchAsync(async(req,res)=>{
+    const result =await AuthServices.loginDB(req.body)
     sendResponse(res, {
         statusCode: httpStatus.OK,
         status: true,
@@ -14,5 +14,5 @@ const signin=catchAsync(async(req,res)=>{
 })
 
 export const AuthControllers={
-    signin
+    login
 }

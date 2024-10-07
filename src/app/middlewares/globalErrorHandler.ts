@@ -13,7 +13,7 @@ const globalErrorHandler = (
   req: Request,
   res: Response,
   next: NextFunction
-):Response => {
+) => {
   let statusCode = 500;
   let message = 'Something went wrong!';
   let errorMessages: TErrorMessages = [
