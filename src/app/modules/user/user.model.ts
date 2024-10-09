@@ -20,6 +20,11 @@ const userSchema = new Schema<TUser>({
     type: String,
     required: true,
   },
+  userId: {
+    type: String,
+    required: true,
+    unique: true,
+  },
   email: {
     type: String,
     required: true,

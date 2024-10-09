@@ -12,6 +12,16 @@ const createUserInto = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const isExistsUserId = catchAsync(async (req, res) => {
+  
+  const result = await UserServices.isExistsUserIdDB(req.query as  Record<string, undefined>);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    status: true,
+    message: "Checked UserId",
+    data: result,
+  });
+});
 const updateUserInto = catchAsync(async (req, res) => {
   const result = await UserServices.updateUserIntoDB(req.body);
   sendResponse(res, {
@@ -44,5 +54,6 @@ export const UserControllers = {
   createUserInto,
   updateUserInto,
   getAllUsers,
-  updateUserRole
+  updateUserRole,
+  isExistsUserId
 };
