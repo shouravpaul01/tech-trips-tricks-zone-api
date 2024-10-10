@@ -23,6 +23,7 @@ const createUserIntoDB = async (payload: TUser) => {
   const jwtPayload = {
     _id: result._id,
     name: result.name,
+    profileImage:result.profileImage || null,
     userId: result.userId,
     email: result.email,
     role: result.role,
@@ -41,38 +42,32 @@ const isExistsUserIdDB = async (query: Record<string, undefined>) => {
   if (isEmailAndUserIdExists) {
     return isEmailAndUserIdExists;
   }
-  const isExistsUserId = await User.findOne({ userId: query.userId });
+  const isExistsUserId = await User.findOne({ userId: query?.userId });
   if (isExistsUserId) {
-    throw new AppError(httpStatus.CONFLICT, "unavilable", "User name is unavailable.");
-  }else{
+    throw new AppError(
+      httpStatus.CONFLICT,
+      "unavilable",
+      "User name is unavailable."
+    );
+  } else {
     throw new AppError(httpStatus.FOUND, "avilable", "User name is available.");
   }
- 
 };
-// const updateUserIdDB = async (payload: TUser) => {
-//   const updateData = { email: payload.email };
-//   const isEmailExists = await User.findOne({ email: payload?.email });
-//   if (isEmailExists) {
-//     throw new AppError(
-//       httpStatus.NOT_FOUND,
-//       "userError",
-//       "Already you are registered."
-//     );
-//   }
+const updateUserIdDB = async (
+  query: Record<string, undefined>,
+  payload: TUser
+) => {
 
-//   const result = await User.findOneAndUpdate({ email: payload.email });
-//   const jwtPayload = {
-//     name: result.name,
-//     email: result.email,
-//     phone: result.phoneNumber,
-//     role: result.role,
-//   };
+  const isEmailExists = await User.findOne({ email: query?.email });
+  if (!isEmailExists) {
+    throw new AppError(httpStatus.NOT_FOUND, "userError", "User not found.");
+  }
+  const result = await User.findOneAndUpdate({ email: query?.email }, payload, {
+    new: true,
+  });
 
-//   const accessToken = jwt.sign(jwtPayload, config.jwt_secret as string, {
-//     expiresIn: config.jwt_expries,
-//   });
-//   return { result, accessToken };
-// };
+  return result;
+};
 const updateUserIntoDB = async (payload: TUser) => {
   const isEmailExists = await User.findOne({ email: payload?.email });
   if (!isEmailExists) {
@@ -83,6 +78,12 @@ const updateUserIntoDB = async (payload: TUser) => {
     payload,
     { new: true }
   );
+  return result;
+};
+const getSingleUserDB = async (userId:string) => {
+  console.log(userId)
+ const result=await User.findOne({userId})
+
   return result;
 };
 const getAllUsersDB = async (query: Record<string, undefined>) => {
@@ -114,5 +115,7 @@ export const UserServices = {
   updateUserIntoDB,
   getAllUsersDB,
   updateUserRoleDB,
-  isExistsUserIdDB
+  isExistsUserIdDB,
+  updateUserIdDB,
+  getSingleUserDB
 };

@@ -22,6 +22,15 @@ const isExistsUserId = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const updateUserID = catchAsync(async (req, res) => {
+  const result = await UserServices.updateUserIdDB(req.query as Record<string,undefined>,req.body);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    status: true,
+    message: "Successfully Done.",
+    data: result,
+  });
+});
 const updateUserInto = catchAsync(async (req, res) => {
   const result = await UserServices.updateUserIntoDB(req.body);
   sendResponse(res, {
@@ -41,6 +50,16 @@ const getAllUsers = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const getSingleUser = catchAsync(async (req, res) => {
+  const {userId}=req.params
+  const result = await UserServices.getSingleUserDB(userId);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    status: true,
+    message: "Retrieved Single user.",
+    data: result,
+  });
+});
 const updateUserRole = catchAsync(async (req, res) => {
   const result = await UserServices.updateUserRoleDB(req.query as Record<string,undefined>);
   sendResponse(res, {
@@ -55,5 +74,7 @@ export const UserControllers = {
   updateUserInto,
   getAllUsers,
   updateUserRole,
-  isExistsUserId
+  isExistsUserId,
+  updateUserID,
+  getSingleUser
 };

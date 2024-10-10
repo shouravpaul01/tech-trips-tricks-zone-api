@@ -16,12 +16,14 @@ const loginDB = async (payload: TSignin) => {
   if (!isMatchedPassword) {
     throw new AppError(httpStatus.NOT_FOUND,'authError',"Incorrect user or password!.");   
   }
-  const jwtPayload={
-    name:isUserExists.name,
-    email:isUserExists.email,
-    phone:isUserExists.phoneNumber,
-    role:isUserExists.role
-  }
+  const jwtPayload = {
+    _id: isUserExists._id,
+    name: isUserExists.name,
+    profileImage:isUserExists.profileImage || null,
+    userId: isUserExists.userId,
+    email: isUserExists.email,
+    role: isUserExists.role,
+  };
  
   
   const accessToken= jwt.sign(jwtPayload, config.jwt_secret as string, { expiresIn:config.jwt_expries });

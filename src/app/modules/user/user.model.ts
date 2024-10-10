@@ -71,6 +71,8 @@ const userSchema = new Schema<TUser>({
     type: Boolean,
     default: false,
   },
+},{
+  timestamps:true
 });
 userSchema.pre("save", async function (next) {
   const user = this;

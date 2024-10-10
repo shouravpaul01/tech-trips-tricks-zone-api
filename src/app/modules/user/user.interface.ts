@@ -1,4 +1,4 @@
-import { Types } from "mongoose";
+
 import { USER_ROLE } from "./user.constant";
 
 export type TSocialLinks = {
@@ -16,6 +16,7 @@ export type TStudyInformation = {
 
 export type TUser = {
   name: string;
+  userId: string;
   email: string;
   password:string;
   role:"User" | "Admin";
