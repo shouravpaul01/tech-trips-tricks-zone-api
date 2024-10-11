@@ -20,7 +20,7 @@ export type TUser = {
   email: string;
   password:string;
   role:"User" | "Admin";
-  gerder:"Male" | "Female" | "Other",
+  gender:"Male" | "Female" | "Other",
   dateOfBirth:Date,
   phoneNumber: string;
   bio: string;
@@ -29,7 +29,7 @@ export type TUser = {
   address: string;
   website: string;
   socialLinks: TSocialLinks;
-  studyInformation: TStudyInformation,
+  educationalInfo: TStudyInformation,
   isVerified:boolean,
 };
 

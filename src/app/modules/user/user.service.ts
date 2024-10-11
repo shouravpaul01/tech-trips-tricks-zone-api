@@ -1,6 +1,7 @@
 import { QueryBuilder } from "../../builder/QueryBuilder";
 import { config } from "../../config";
 import { AppError } from "../../errors/AppError";
+import { deleteFileFromCloudinary } from "../../utils/deleteFileFromCloudinary";
 import generateUniqueUserId from "../../utils/generateUniqueUserId";
 import { TUser } from "./user.interface";
 import { User } from "./user.model";
@@ -68,13 +69,22 @@ const updateUserIdDB = async (
 
   return result;
 };
-const updateUserIntoDB = async (payload: TUser) => {
-  const isEmailExists = await User.findOne({ email: payload?.email });
-  if (!isEmailExists) {
+const updateUserIntoDB = async (userId:string,files:any,payload: TUser) => {
+  const isUserExists = await User.findOne({ userId: userId });
+  if (!isUserExists) {
     throw new AppError(httpStatus.NOT_FOUND, "userError", "User Not found.");
   }
+  if (files?.profileImage) {
+    isUserExists?.profileImage && await deleteFileFromCloudinary(isUserExists?.profileImage)
+    payload.profileImage=files.profileImage[0].path
+  }
+  if (files?.coverImage) {
+    isUserExists?.coverImage && await deleteFileFromCloudinary(isUserExists?.coverImage)
+    payload.coverImage=files.coverImage[0].path
+  }
+  
   const result = await User.findOneAndUpdate(
-    { email: payload?.email },
+    { userId: userId },
     payload,
     { new: true }
   );

@@ -32,7 +32,9 @@ const updateUserID = catchAsync(async (req, res) => {
   });
 });
 const updateUserInto = catchAsync(async (req, res) => {
-  const result = await UserServices.updateUserIntoDB(req.body);
+  const {userId}=req.params
+  const files = (req as any).files;
+  const result = await UserServices.updateUserIntoDB(userId,files,req.body);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     status: true,

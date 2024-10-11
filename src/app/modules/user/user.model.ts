@@ -40,7 +40,7 @@ const userSchema = new Schema<TUser>({
     required: true,
     select: 0,
   },
-  gerder: {
+  gender: {
     type: String,
     enum:["Male","Female","Other"]
   },
@@ -65,7 +65,7 @@ const userSchema = new Schema<TUser>({
   website: {
     type: String,
   },
-  studyInformation: StudyInformationSchema,
+  educationalInfo: StudyInformationSchema,
   socialLinks: SocialLinksSchema,
   isVerified: {
     type: Boolean,
