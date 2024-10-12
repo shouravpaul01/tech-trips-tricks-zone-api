@@ -1,7 +1,10 @@
 import { TPost } from "./post.interface"
 import { Post } from "./post.model"
 
-const createPostIntoDB=async(payload:TPost)=>{
+const createPostIntoDB=async(files:any,payload:TPost)=>{
+    if (files.length>0) {
+        payload.images=files?.map((file:any)=>file.path)
+    }
     const result=await Post.create(payload)
     return result
 }

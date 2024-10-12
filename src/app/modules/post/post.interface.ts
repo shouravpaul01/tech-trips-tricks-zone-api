@@ -1,8 +1,8 @@
 import { Types } from "mongoose";
 
 export type TPost= {
-    title: string;
-    category:Types.ObjectId
+    category:string
+    images:string[],
     content: string;
     upvotes: number;
     downvotes: number;

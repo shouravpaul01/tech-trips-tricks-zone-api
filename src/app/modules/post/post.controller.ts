@@ -4,7 +4,7 @@ import { sendResponse } from "../../utils/sendResponse";
 import { PostServices } from "./post.service";
 
 const createPostInto=catchAsync(async(req,res)=>{
-    const result=await PostServices.createPostIntoDB(req.body)
+    const result=await PostServices.createPostIntoDB((req as any).files,req.body)
     sendResponse(res,{
         statusCode:httpStatus.OK,
         status:true,
