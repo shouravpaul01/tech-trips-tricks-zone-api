@@ -7,6 +7,8 @@ import parseData from '../../middlewares/parseData'
 const router=express.Router()
 
 router.post("/create-post",upload.array("images"),parseData, validateRequest(postValidation),PostController.createPostInto)
+router.get("/single-post/:postId",PostController.getSinglePost)
+router.get("/",PostController.getAllPosts)
 router.patch("/update-post/:postId",validateRequest(postValidation),PostController.updatePostInto)
 
 export const PostRoutes=router

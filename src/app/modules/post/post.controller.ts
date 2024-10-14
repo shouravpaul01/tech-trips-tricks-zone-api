@@ -12,6 +12,27 @@ const createPostInto=catchAsync(async(req,res)=>{
         data:result
     })
 })
+const getAllPosts=catchAsync(async(req,res)=>{
+    console.log('sessssssssssss')
+    const result=await PostServices.getAllPostsDB(req.query as Record<string,undefined>)
+    sendResponse(res,{
+        statusCode:httpStatus.OK,
+        status:true,
+        message:"Retrieved all posts ",
+        data:result
+    })
+})
+const getSinglePost=catchAsync(async(req,res)=>{
+    console.log('se')
+   const {postId}=req.params
+    const result=await PostServices.getSinglePostDB(postId)
+    sendResponse(res,{
+        statusCode:httpStatus.OK,
+        status:true,
+        message:"Retrieved single post. ",
+        data:result
+    })
+})
 const updatePostInto=catchAsync(async(req,res)=>{
     const {postId}=req.params
     const result=await PostServices.updatePostIntoDB(postId,req.body)
@@ -25,5 +46,7 @@ const updatePostInto=catchAsync(async(req,res)=>{
 
 export const PostController={
     createPostInto,
+    getAllPosts,
+    getSinglePost,
     updatePostInto
 }

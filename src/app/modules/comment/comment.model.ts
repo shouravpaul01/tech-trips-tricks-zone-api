@@ -2,6 +2,10 @@ import { model, Schema } from "mongoose";
 import { TComment } from "./comment.interface";
 
 const commentSchema = new Schema<TComment>({
+  user:{
+    type: Schema.Types.ObjectId,
+    ref: "User",
+  },
     text: { type: String, required: true },
     upvotes: { type: Number, default: 0 },
     downvotes: { type: Number, default: 0 },
