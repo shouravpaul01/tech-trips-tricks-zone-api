@@ -43,10 +43,32 @@ const updatePostInto=catchAsync(async(req,res)=>{
         data:result
     })
 })
+const upvoteInto=catchAsync(async(req,res)=>{
+    const {postId}=req.params
+    const result=await PostServices.upvoteIntoDB(postId,req.query as Record<string,undefined>)
+    sendResponse(res,{
+        statusCode:httpStatus.OK,
+        status:true,
+        message:"Successfull ",
+        data:result
+    })
+})
+const downvoteInto=catchAsync(async(req,res)=>{
+    const {postId}=req.params
+    const result=await PostServices.downvoteIntoDB(postId,req.query as Record<string,undefined>)
+    sendResponse(res,{
+        statusCode:httpStatus.OK,
+        status:true,
+        message:"Successfull ",
+        data:result
+    })
+})
 
 export const PostController={
     createPostInto,
     getAllPosts,
     getSinglePost,
-    updatePostInto
+    updatePostInto,
+    upvoteInto,
+    downvoteInto
 }

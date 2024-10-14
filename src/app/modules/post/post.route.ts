@@ -10,5 +10,7 @@ router.post("/create-post",upload.array("images"),parseData, validateRequest(pos
 router.get("/single-post/:postId",PostController.getSinglePost)
 router.get("/",PostController.getAllPosts)
 router.patch("/update-post/:postId",validateRequest(postValidation),PostController.updatePostInto)
+router.patch("/upvote/:postId",PostController.upvoteInto)
+router.patch("/downvote/:postId",PostController.downvoteInto)
 
 export const PostRoutes=router

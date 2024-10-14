@@ -7,6 +7,8 @@ export type TPost = {
   content: string;
   upvotes: number;
   downvotes: number;
+  isUpvotedIP: string[];
+  isDownvotedIP: string[];
   comments: Types.ObjectId[];
   isPremium: boolean;
   viewStatus: "Public" | "Hide";
