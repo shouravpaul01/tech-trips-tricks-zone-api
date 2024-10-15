@@ -23,8 +23,29 @@ const updateCommentInto=catchAsync(async(req,res)=>{
         data:result
     })
 })
-
+const upvoteInto=catchAsync(async(req,res)=>{
+    const {commentId}=req.params
+    const result=await CommentServices.upvoteIntoDB(commentId,req.query as Record<string,undefined>)
+    sendResponse(res,{
+        statusCode:httpStatus.OK,
+        status:true,
+        message:"Successfull ",
+        data:result
+    })
+})
+const downvoteInto=catchAsync(async(req,res)=>{
+    const {commentId}=req.params
+    const result=await CommentServices.downvoteIntoDB(commentId,req.query as Record<string,undefined>)
+    sendResponse(res,{
+        statusCode:httpStatus.OK,
+        status:true,
+        message:"Successfull ",
+        data:result
+    })
+})
 export const CommentController={
     createCommentInto,
-    updateCommentInto
+    updateCommentInto,
+    upvoteInto,
+    downvoteInto
 }

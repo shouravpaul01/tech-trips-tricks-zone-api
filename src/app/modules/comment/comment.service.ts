@@ -18,7 +18,7 @@ const createCommentIntoDB = async (payload: TComment) => {
     const commentResult = await Comment.create([payload], { session });
 
 
-    const postResult = await Post.findByIdAndUpdate(
+   await Post.findByIdAndUpdate(
       payload.post,
       { $push: { comments: commentResult[0]._id } },
       { session }
@@ -46,7 +46,67 @@ const updateCommentIntoDB=async(commentId:string,payload:TComment)=>{
     const result=await Comment.findByIdAndUpdate(commentId,payload,{new:true})
     return result
 }
+const upvoteIntoDB = async (
+  commentId: string,
+  query: Record<string, undefined>
+) => {
+  // Extract the IP address of the user
+  if (!query.ipAddress) {
+    throw new AppError(httpStatus.NOT_FOUND, "postError", "Network problem!.");
+  }
+
+  const isPostExists = await Comment.findById(commentId);
+  if (!isPostExists) {
+    throw new AppError(httpStatus.NOT_FOUND, "postError", "Post not found.");
+  }
+  if (!isPostExists?.isUpvotedIP.includes(query.ipAddress!)) {
+    const result = await Comment.findByIdAndUpdate(commentId, {
+      $inc: { upvotes: 1 }, // Increment the upvote count
+      $push: { isUpvotedIP: query.ipAddress! }, // Add the IP to the upvoted list
+    },{new:true});
+    return result;
+  }
+  // Check if the IP has already voted
+  if (isPostExists.isUpvotedIP.includes(query.ipAddress!)) {
+    const result = await Comment.findByIdAndUpdate(commentId, {
+      $pull: { isUpvotedIP: query.ipAddress! },
+      $inc: { upvotes: -1 },
+    },{new:true});
+    return result;
+  }
+};
+const downvoteIntoDB = async (
+  commentId: string,
+  query: Record<string, undefined>
+) => {
+  // Extract the IP address of the user
+  if (!query.ipAddress) {
+    throw new AppError(httpStatus.NOT_FOUND, "postError", "Network problem!.");
+  }
+
+  const isPostExists = await Comment.findById(commentId);
+  if (!isPostExists) {
+    throw new AppError(httpStatus.NOT_FOUND, "postError", "Comment not found.");
+  }
+  if (!isPostExists?.isDownvotedIP.includes(query.ipAddress!)) {
+    const result = await Comment.findByIdAndUpdate(commentId, {
+      $inc: { downvotes: 1 },
+      $push: { isDownvotedIP: query.ipAddress! },
+    },{new:true});
+    return result;
+  }
+  // Check if the IP has already voted
+  if (isPostExists.isDownvotedIP.includes(query.ipAddress!)) {
+    const result = await Comment.findByIdAndUpdate(commentId, {
+      $pull: { isDownvotedIP: query.ipAddress! },
+      $inc: { downvotes: -1 },
+    },{new:true});
+    return result;
+  }
+};
 export const CommentServices={
     createCommentIntoDB,
-    updateCommentIntoDB
+    updateCommentIntoDB,
+    upvoteIntoDB,
+    downvoteIntoDB
 }

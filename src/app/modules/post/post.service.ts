@@ -12,6 +12,7 @@ const createPostIntoDB = async (files: any, payload: TPost) => {
   return result;
 };
 const getAllPostsDB = async (query: Record<string, undefined>) => {
+  console.log(query)
   const searchableFields = ["name"];
   const mainQuery = new QueryBuilder(
     Post.find({}).populate("user").populate("comments"),
@@ -53,8 +54,8 @@ const upvoteIntoDB = async (
   }
   if (!isPostExists?.isUpvotedIP.includes(query.ipAddress!)) {
     const result = await Post.findByIdAndUpdate(postId, {
-      $inc: { upvotes: 1 }, // Increment the upvote count
-      $push: { isUpvotedIP: query.ipAddress! }, // Add the IP to the upvoted list
+      $inc: { upvotes: 1 }, 
+      $push: { isUpvotedIP: query.ipAddress! }, 
     },{new:true});
     return result;
   }

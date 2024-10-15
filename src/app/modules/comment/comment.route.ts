@@ -7,5 +7,7 @@ const router=express.Router()
 
 router.post("/create-comment",validateRequest(commentValidation),CommentController.createCommentInto)
 router.patch("/update-comment/:commentId",validateRequest(commentValidation),CommentController.updateCommentInto)
+router.patch("/upvote/:commentId",CommentController.upvoteInto)
+router.patch("/downvote/:commentId",CommentController.downvoteInto)
 
 export const CommentRoutes=router
