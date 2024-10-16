@@ -6,14 +6,17 @@ const postSchema = new Schema<TPost>({
   //   type: Schema.Types.ObjectId,
   //   ref: "Category",
   // },
-  user:{
-      type: Schema.Types.ObjectId,
-      ref: "User",
-    },
-  
+  user: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+  },
+  type: {
+    type: String,
+    enum: ["Free", "Premium"],
+    default:"Free"
+  },
   category: {
     type: String,
-    
   },
   images: [
     {
@@ -24,15 +27,13 @@ const postSchema = new Schema<TPost>({
   upvotes: { type: Number, default: 0 },
   isUpvotedIP: [
     {
-      type: String
-     
-    }
+      type: String,
+    },
   ],
   isDownvotedIP: [
     {
-      type: String
-     
-    }
+      type: String,
+    },
   ],
   downvotes: { type: Number, default: 0 },
   comments: [

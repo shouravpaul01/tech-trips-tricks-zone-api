@@ -1,4 +1,5 @@
 
+import { Types } from "mongoose";
 import { USER_ROLE } from "./user.constant";
 
 export type TSocialLinks = {
@@ -13,6 +14,7 @@ export type TStudyInformation = {
   fieldOfStudy: string;
   graduationYear: number;
 };
+
 
 export type TUser = {
   name: string;
@@ -30,7 +32,8 @@ export type TUser = {
   website: string;
   socialLinks: TSocialLinks;
   educationalInfo: TStudyInformation,
-  isVerified:boolean,
+  isSubscribed:boolean,
+  subscription:Types.ObjectId
 };
 
 export type TUserRole = keyof typeof USER_ROLE;
