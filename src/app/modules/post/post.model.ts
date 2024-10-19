@@ -53,6 +53,8 @@ const postSchema = new Schema<TPost>({
     type: Boolean,
     default: false,
   },
+},{
+  timestamps:true
 });
 
 export const Post = model<TPost>("Post", postSchema);

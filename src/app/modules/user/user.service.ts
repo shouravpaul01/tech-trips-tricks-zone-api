@@ -91,14 +91,14 @@ const updateUserIntoDB = async (userId:string,files:any,payload: TUser) => {
   return result;
 };
 const getSingleUserDB = async (userId:string) => {
-  console.log(userId)
+
  const result=await User.findOne({userId})
 
   return result;
 };
 const getAllUsersDB = async (query: Record<string, undefined>) => {
   const searchableFields = ["name", "email", "phone"];
-  const mainQuery = new QueryBuilder(User.find({}), query).search(
+  const mainQuery = new QueryBuilder(User.find({}).populate("subscription"), query).search(
     searchableFields
   );
   const totalPages = (await mainQuery.totalPages()).totalQuery;
@@ -109,6 +109,7 @@ const getAllUsersDB = async (query: Record<string, undefined>) => {
   return result;
 };
 const updateUserRoleDB = async (query: Record<string, undefined>) => {
+
   const isEmailExists = await User.findOne({ email: query?.email });
   if (!isEmailExists) {
     throw new AppError(httpStatus.NOT_FOUND, "userError", "User Not found.");
@@ -120,6 +121,19 @@ const updateUserRoleDB = async (query: Record<string, undefined>) => {
   );
   return result;
 };
+const updateUserActiveStatusDB = async (query: Record<string, undefined>) => {
+
+  const isEmailExists = await User.findOne({ email: query?.email });
+  if (!isEmailExists) {
+    throw new AppError(httpStatus.NOT_FOUND, "userError", "User Not found.");
+  }
+  const result = await User.findOneAndUpdate(
+    { email: query?.email },
+    { isActive: query.isActive },
+    { new: true }
+  );
+  return result;
+};
 export const UserServices = {
   createUserIntoDB,
   updateUserIntoDB,
@@ -127,5 +141,6 @@ export const UserServices = {
   updateUserRoleDB,
   isExistsUserIdDB,
   updateUserIdDB,
-  getSingleUserDB
+  getSingleUserDB,
+  updateUserActiveStatusDB
 };

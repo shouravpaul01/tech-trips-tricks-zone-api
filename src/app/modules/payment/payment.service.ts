@@ -12,16 +12,20 @@ const paymentConfirmationDB = async (txnId: string, status: string) => {
     verifyPaymentRes.pay_status === "Successful" &&
     status == "success"
   ) {
-    const subscription = await Subscription.findOne({ transactionId: txnId });
-    await User.findByIdAndUpdate(subscription?.user,{isSubscribed:true,subscription:subscription?._id})
+    const subscription = await Subscription.findOneAndUpdate(
+      { transactionId: txnId },
+      { isActive: true },
+      { new: true }
+    );
+    await User.findByIdAndUpdate(subscription?.user, {
+      isSubscribed: true,
+      subscription: subscription?._id,
+    });
     return true;
   } else {
-    const isSubscriptionExists = await Subscription.findOne({ transactionId: txnId });
-    if (!isSubscriptionExists) {
-      return false;
-    }
-    await Subscription.findOneAndDelete({ transactionId: txnId });
     
+    await Subscription.findOneAndDelete({ transactionId: txnId });
+
     return false;
   }
 };

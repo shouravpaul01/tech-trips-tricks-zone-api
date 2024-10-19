@@ -4,8 +4,8 @@ import { sendResponse } from "../../utils/sendResponse";
 import { SubscriptionServices } from "./subscription.service";
 
 const subscriptionInto=catchAsync(async(req,res)=>{
-    const {userId}=req.params
-    const result=await SubscriptionServices.subscriptionIntoDB(userId,req.body)
+    
+    const result=await SubscriptionServices.subscriptionIntoDB(req.body)
     sendResponse(res,{
         statusCode:httpStatus.OK,
         status:true,

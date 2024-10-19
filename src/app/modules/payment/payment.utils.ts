@@ -10,9 +10,9 @@ export const initiatePayment = async (paymentInfo:TPaymentInfo) => {
     const res:any = await axios.post(config.payment_base_url!, {
       store_id: config.store_id,
       tran_id: paymentInfo.transactionId,
-      success_url: `http://localhost:5000/api/payment/confirm?txnId=${paymentInfo.transactionId}&status=success`,
-      fail_url: `http://localhost:5000/api/payment/confirm?&status=failed`,
-      cancel_url: "http://localhost:3000/",
+      success_url: `http://localhost:5000/api/payments/confirm?txnId=${paymentInfo.transactionId}&status=success`,
+      fail_url: `http://localhost:5000/api/payments/confirm?txnId=${paymentInfo.transactionId}&status=failed`,
+      cancel_url: "http://localhost:5173/",
       amount: paymentInfo.amount,
       currency: "BDT",
       signature_key: config.signature_key,

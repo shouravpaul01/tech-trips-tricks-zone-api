@@ -19,7 +19,17 @@ const updateCommentInto=catchAsync(async(req,res)=>{
     sendResponse(res,{
         statusCode:httpStatus.OK,
         status:true,
-        message:"Successfully Updated. ",
+        message:"The Comment was updated",
+        data:result
+    })
+})
+const deleteComment=catchAsync(async(req,res)=>{
+    const {commentId}=req.params
+    const result=await CommentServices.deleteCommentDB(commentId)
+    sendResponse(res,{
+        statusCode:httpStatus.OK,
+        status:true,
+        message:"The comment was deleted.",
         data:result
     })
 })
@@ -46,6 +56,7 @@ const downvoteInto=catchAsync(async(req,res)=>{
 export const CommentController={
     createCommentInto,
     updateCommentInto,
+    deleteComment,
     upvoteInto,
     downvoteInto
 }

@@ -46,6 +46,10 @@ const updateCommentIntoDB=async(commentId:string,payload:TComment)=>{
     const result=await Comment.findByIdAndUpdate(commentId,payload,{new:true})
     return result
 }
+const deleteCommentDB=async(commentId:string)=>{
+  const result=await Comment.findByIdAndDelete(commentId)
+  return result
+}
 const upvoteIntoDB = async (
   commentId: string,
   query: Record<string, undefined>
@@ -108,5 +112,6 @@ export const CommentServices={
     createCommentIntoDB,
     updateCommentIntoDB,
     upvoteIntoDB,
-    downvoteIntoDB
+    downvoteIntoDB,
+    deleteCommentDB
 }

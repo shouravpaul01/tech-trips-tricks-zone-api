@@ -1,4 +1,5 @@
 
+import httpStatus from "http-status";
 import { catchAsync } from "../../utils/catchAsync";
 import { sendResponse } from "../../utils/sendResponse";
 import { PaymentServices } from "./payment.service";
@@ -9,7 +10,8 @@ const paymentConfirmation=catchAsync(async(req,res)=>{
     if (result) {
       res.redirect('http://localhost:3000/?payment=success')
     }else{
-      res.redirect('http://localhost:3000/?payment=cencel')
+      res.redirect('http://localhost:3000/payment/?success=failed')
+ 
     }
     
 })

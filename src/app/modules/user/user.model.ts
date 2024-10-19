@@ -1,5 +1,5 @@
 import { Schema, model } from "mongoose";
-import { TCurrentSubscription, TSocialLinks, TStudyInformation, TUser } from "./user.interface";
+import {  TSocialLinks, TStudyInformation, TUser } from "./user.interface";
 import { config } from "../../config";
 import bcrypt from "bcrypt";
 
@@ -15,15 +15,7 @@ const StudyInformationSchema = new Schema<TStudyInformation>({
   fieldOfStudy: { type: String },
   graduationYear: { type: Number },
 });
-const currentSubscriptionSchema = new Schema<TCurrentSubscription>({
-  plan: {
-    type: String,
-    enum: ["monthly", "6 months", "1 year"], 
-  },
-  startDate: Date,
-  endDate: Date, 
-  isActive: { type: Boolean, default: false }, 
-});
+
 const userSchema = new Schema<TUser>({
   name: {
     type: String,
@@ -77,8 +69,14 @@ const userSchema = new Schema<TUser>({
   educationalInfo: StudyInformationSchema,
   socialLinks: SocialLinksSchema,
   isSubscribed: { type: Boolean, default: false },
-  currentSubscription:currentSubscriptionSchema,
-  allSubscribtion:[currentSubscriptionSchema]
+  subscription:{
+    type:Schema.Types.ObjectId,
+    ref:"Subscription"
+  },
+  isActive:{
+    type:Boolean,
+    default:true
+  }
 },{
   timestamps:true
 });

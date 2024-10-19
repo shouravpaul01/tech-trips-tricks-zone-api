@@ -71,6 +71,15 @@ const updateUserRole = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const updateUserActiveStatus = catchAsync(async (req, res) => {
+  const result = await UserServices.updateUserActiveStatusDB(req.query as Record<string,undefined>);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    status: true,
+    message: "Updated successfully.",
+    data: result,
+  });
+});
 export const UserControllers = {
   createUserInto,
   updateUserInto,
@@ -78,5 +87,6 @@ export const UserControllers = {
   updateUserRole,
   isExistsUserId,
   updateUserID,
-  getSingleUser
+  getSingleUser,
+  updateUserActiveStatus
 };

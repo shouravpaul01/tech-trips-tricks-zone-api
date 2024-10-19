@@ -33,7 +33,8 @@ export type TUser = {
   socialLinks: TSocialLinks;
   educationalInfo: TStudyInformation,
   isSubscribed:boolean,
-  subscription:Types.ObjectId
+  subscription:Types.ObjectId,
+  isActive:boolean
 };
 
 export type TUserRole = keyof typeof USER_ROLE;

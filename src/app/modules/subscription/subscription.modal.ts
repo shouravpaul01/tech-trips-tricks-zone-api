@@ -9,7 +9,7 @@ const subscriptionSchema = new Schema<TSubscription>({
   },
   plan: {
     type: String,
-    enum: ["1 month", "6 months", "1 year"],
+    enum: ["1 Month", "6 Months", "1 Year"],
     required: true,
   },
   transactionId:{
@@ -32,6 +32,8 @@ const subscriptionSchema = new Schema<TSubscription>({
     type: Boolean,
     default: false,
   },
+},{
+  timestamps:true
 });
 
-export const Subscription = model("Subscription", subscriptionSchema);
+export const Subscription = model<TSubscription>("Subscription", subscriptionSchema);
