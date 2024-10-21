@@ -61,6 +61,16 @@ const removePostImage = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const deletePost = catchAsync(async (req, res) => {
+  const { postId } = req.params;
+  const result = await PostServices.deletePostDB(postId);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    status: true,
+    message: "The Post was deleted.",
+    data: result,
+  });
+});
 const upvoteInto = catchAsync(async (req, res) => {
   const { postId } = req.params;
   const result = await PostServices.upvoteIntoDB(
@@ -87,13 +97,24 @@ const downvoteInto = catchAsync(async (req, res) => {
     data: result,
   });
 });
-
+const restorePost = catchAsync(async (req, res) => {
+  const { postId } = req.params;
+  const result = await PostServices.restorePostDB(postId);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    status: true,
+    message: "The post was successfully restored.",
+    data: result,
+  });
+});
 export const PostController = {
   createPostInto,
   getAllPosts,
   getSinglePost,
   updatePostInto,
+  removePostImage,
+  deletePost,
   upvoteInto,
   downvoteInto,
-  removePostImage
+  restorePost
 };

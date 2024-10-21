@@ -26,12 +26,14 @@ const getAllPostsDB = async (query: Record<string, undefined>) => {
     query
   )
     .search(searchableFields)
-    .filter()
-    .paginate();
+    .filter().sort()
+    
+    const totalPages = (await mainQuery.totalPages()).totalQuery;
+    const paginateQuery = mainQuery.paginate();
+    const result = await paginateQuery.modelQuery;
+   
 
-  const result = await mainQuery.modelQuery;
-
-  return { data: result, page: Number(query?.page) || 1 };
+  return { data: result, page: Number(query?.page) || 1 ,totalPages:totalPages};
 };
 const getSinglePostDB = async (postId: string) => {
   const result = await Post.findById(postId)
@@ -81,6 +83,16 @@ const removePostImageDB = async (query: Record<string, undefined>) => {
   if (result) {
     await deleteFileFromCloudinary(query.image!);
   }
+  return result;
+};
+const deletePostDB = async (postId: string) => {
+  const isExistsPost = await Post.findById(postId);
+
+  if (!isExistsPost) {
+    throw new AppError(httpStatus.NOT_FOUND, "postError", "Post not found.");
+  }
+  const result = await Post.findByIdAndUpdate(postId,{isDeleted:true},{new:true});
+
   return result;
 };
 const upvoteIntoDB = async (
@@ -157,12 +169,24 @@ const downvoteIntoDB = async (
     return result;
   }
 };
+const restorePostDB = async (postId: string) => {
+  const isExistsPost = await Post.findById(postId);
+
+  if (!isExistsPost) {
+    throw new AppError(httpStatus.NOT_FOUND, "postError", "Post not found.");
+  }
+  const result = await Post.findByIdAndUpdate(postId,{isDeleted:false},{new:true});
+
+  return result;
+};
 export const PostServices = {
   createPostIntoDB,
   getSinglePostDB,
   updatePostIntoDB,
+  removePostImageDB,
   getAllPostsDB,
+  deletePostDB,
   upvoteIntoDB,
   downvoteIntoDB,
-  removePostImageDB,
+  restorePostDB
 };
