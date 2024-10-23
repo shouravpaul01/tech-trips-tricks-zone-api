@@ -1,4 +1,3 @@
-
 import { Types } from "mongoose";
 import { USER_ROLE } from "./user.constant";
 
@@ -15,15 +14,14 @@ export type TStudyInformation = {
   graduationYear: number;
 };
 
-
 export type TUser = {
   name: string;
   userId: string;
   email: string;
-  password:string;
-  role:"User" | "Admin";
-  gender:"Male" | "Female" | "Other",
-  dateOfBirth:Date,
+  password: string;
+  role: "User" | "Admin";
+  gender: "Male" | "Female" | "Other";
+  dateOfBirth: Date;
   phoneNumber: string;
   bio: string;
   profileImage: string;
@@ -31,10 +29,19 @@ export type TUser = {
   address: string;
   website: string;
   socialLinks: TSocialLinks;
-  educationalInfo: TStudyInformation,
-  isSubscribed:boolean,
-  subscription:Types.ObjectId,
-  isActive:boolean
+  educationalInfo: TStudyInformation;
+  isSubscribed: boolean;
+  subscription: Types.ObjectId;
+  following: [Types.ObjectId];
+  followers: [Types.ObjectId];
+  isActive: boolean;
 };
-
+export type TJwtDecodedUserData = {
+  _id: string;
+  name: string;
+  profileImage?: string | null; 
+  userId: string;
+  email: string;
+  role: string;
+};
 export type TUserRole = keyof typeof USER_ROLE;

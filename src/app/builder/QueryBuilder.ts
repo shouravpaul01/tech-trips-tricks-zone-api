@@ -24,6 +24,7 @@ export class QueryBuilder<T> {
    
     return this;
   }
+
   filter() {
     const queryObj = { ...this.query };
     const excludeFelid = ["search", "sort", "page", "limit", "fields"];
@@ -31,6 +32,7 @@ export class QueryBuilder<T> {
     this.modelQuery = this.modelQuery.find(queryObj as FilterQuery<T>);
     return this;
   }
+  
   sort() {
     const sort = this.query?.sort || "-createdAt";
     this.modelQuery = this.modelQuery.sort(sort as string);

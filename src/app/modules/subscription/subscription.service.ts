@@ -66,6 +66,34 @@ const subscriptionIntoDB = async (payload: TSubscription) => {
     throw new AppError(httpStatus.NOT_FOUND, "paymentError", "Payment not successful. Please try again.");
   } 
 };
+const monthlyPaymentsDB=async()=>{
+  const result =  await Subscription.aggregate([
+    {
+      $match: {
+        isActive: true, 
+      },
+    },
+    {
+      $group: {
+        _id: {
+          $dateToString: { format: "%b-%Y", date: "$startDate" }, 
+        },
+        totalAmount: { $sum: "$amount" }, 
+      },
+    },
+    {
+      $project: {
+        month: "$_id",
+        totalAmount: 1, 
+        _id: 0, 
+      },
+    },
+    { $sort: { month: 1 } }, 
+  ]);
+  return result
+}
 export const SubscriptionServices={
-    subscriptionIntoDB
+    subscriptionIntoDB,
+    monthlyPaymentsDB
+
 }

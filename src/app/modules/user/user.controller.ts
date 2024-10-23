@@ -2,6 +2,8 @@ import httpStatus from "http-status";
 import { catchAsync } from "../../utils/catchAsync";
 import { sendResponse } from "../../utils/sendResponse";
 import { UserServices } from "./user.service";
+import { query } from "express";
+import { TJwtDecodedUserData } from "./user.interface";
 
 const createUserInto = catchAsync(async (req, res) => {
   const result = await UserServices.createUserIntoDB(req.body);
@@ -53,8 +55,7 @@ const getAllUsers = catchAsync(async (req, res) => {
   });
 });
 const getSingleUser = catchAsync(async (req, res) => {
-  const {userId}=req.params
-  const result = await UserServices.getSingleUserDB(userId);
+  const result = await UserServices.getSingleUserDB(req.user as TJwtDecodedUserData,);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     status: true,
@@ -80,6 +81,37 @@ const updateUserActiveStatus = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const followingUser = catchAsync(async (req, res) => {
+
+  const {followingUserId}=req.params
+  const result = await UserServices.followingUserDB(req.user as TJwtDecodedUserData,followingUserId as string);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    status: true,
+    message: "Successfully Followed.",
+    data: result,
+  });
+});
+const getAllUsersForFollowing = catchAsync(async (req, res) => {
+  const result = await UserServices.getAllUsersForFollowingDB(req.user as TJwtDecodedUserData,req.query as Record<string,undefined>);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    status: true,
+    message: "Successfully retrieved",
+    data: result,
+  });
+});
+const unFollowUser = catchAsync(async (req, res) => {
+
+  const {followingUserId}=req.params
+  const result = await UserServices.unFollowUserDB(req.user as TJwtDecodedUserData,followingUserId as string);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    status: true,
+    message: "Successfully Unfollowed.",
+    data: result,
+  });
+});
 export const UserControllers = {
   createUserInto,
   updateUserInto,
@@ -88,5 +120,8 @@ export const UserControllers = {
   isExistsUserId,
   updateUserID,
   getSingleUser,
-  updateUserActiveStatus
+  updateUserActiveStatus,
+  followingUser,
+  getAllUsersForFollowing,
+  unFollowUser
 };
