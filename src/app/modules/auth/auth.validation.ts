@@ -13,7 +13,22 @@ const changePasswordValidationSchema=z.object({
         password:z.string({required_error:"The field is reuired."}).min(6,{message:"Password must be six characters."})
     })
 })
+const matchedOTPValidation=z.object({
+    body:z.object({
+        email:z.string({required_error:"The field is reuired."}).email({ message: "Enter a valid Email." }),
+        otp:z.string({required_error:"The field is reuired."}).min(6,{message:"OTP must be 6-Digits."}),
+       
+    })
+})
+const resetPasswordValidation=z.object({
+    body:z.object({
+        password:z.string({required_error:"The field is reuired."}).min(6,{message:"Password must be six characters."})
+       
+    })
+})
 export const AuthValidations={
     signinValidationSchema,
-    changePasswordValidationSchema
+    changePasswordValidationSchema,
+    matchedOTPValidation,
+    resetPasswordValidation
 }

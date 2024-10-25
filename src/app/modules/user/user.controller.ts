@@ -33,18 +33,37 @@ const updateUserID = catchAsync(async (req, res) => {
     data: result,
   });
 });
-const updateUserInto = catchAsync(async (req, res) => {
-  const {userId}=req.params
-  const files = (req as any).files;
-  const result = await UserServices.updateUserIntoDB(userId,files,req.body);
+
+const getSingleUser = catchAsync(async (req, res) => {
+  const result = await UserServices.getSingleUserDB(req.user as TJwtDecodedUserData);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     status: true,
-    message: "Updated successfully.",
+    message: "Retrieved Single user.",
     data: result,
   });
 });
-
+const getSingleUserById = catchAsync(async (req, res) => {
+  const {userId}=req.params
+  const result = await UserServices.getSingleUserByIdDB(userId);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    status: true,
+    message: "Retrieved Single user.",
+    data: result,
+  });
+});
+const getSingleUserByEmail= catchAsync(async (req, res) => {
+  const {email}=req.query
+  
+  const result = await UserServices.getSingleUserByEmailDB(email as string);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    status: true,
+    message: "Retrieved Single user.",
+    data: result,
+  });
+});
 const getAllUsers = catchAsync(async (req, res) => {
   const result = await UserServices.getAllUsersDB(req.query as Record<string,undefined>);
   sendResponse(res, {
@@ -54,12 +73,14 @@ const getAllUsers = catchAsync(async (req, res) => {
     data: result,
   });
 });
-const getSingleUser = catchAsync(async (req, res) => {
-  const result = await UserServices.getSingleUserDB(req.user as TJwtDecodedUserData,);
+const updateUserInto = catchAsync(async (req, res) => {
+  const {userId}=req.params
+  const files = (req as any).files;
+  const result = await UserServices.updateUserIntoDB(userId,files,req.body);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     status: true,
-    message: "Retrieved Single user.",
+    message: "Updated successfully.",
     data: result,
   });
 });
@@ -112,16 +133,30 @@ const unFollowUser = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const followBackUser = catchAsync(async (req, res) => {
+
+  const {followingUserId}=req.params
+  const result = await UserServices.followBackDB(req.user as TJwtDecodedUserData,followingUserId as string);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    status: true,
+    message: "Successfully following each other.",
+    data: result,
+  });
+});
 export const UserControllers = {
   createUserInto,
   updateUserInto,
+  getSingleUser,
+  getSingleUserById,
   getAllUsers,
   updateUserRole,
   isExistsUserId,
   updateUserID,
-  getSingleUser,
   updateUserActiveStatus,
   followingUser,
   getAllUsersForFollowing,
-  unFollowUser
+  unFollowUser,
+  followBackUser,
+  getSingleUserByEmail
 };

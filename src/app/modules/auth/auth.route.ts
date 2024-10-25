@@ -21,5 +21,16 @@ router.patch(
   validateRequest(AuthValidations.changePasswordValidationSchema),
   AuthControllers.changePassword
 );
-
+router.patch(
+  "/send-otp",
+  AuthControllers.sendOTP
+);
+router.post(
+  "/matched-otp",validateRequest(AuthValidations.matchedOTPValidation),
+  AuthControllers.matchedOTP
+);
+router.patch(
+  "/reset-password",validateRequest(AuthValidations.resetPasswordValidation),
+  AuthControllers.resetPassword
+);
 export const AuthRoutes = router;

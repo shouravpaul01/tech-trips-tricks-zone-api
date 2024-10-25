@@ -18,6 +18,7 @@ export type TUser = {
   name: string;
   userId: string;
   email: string;
+  otp:string;
   password: string;
   role: "User" | "Admin";
   gender: "Male" | "Female" | "Other";

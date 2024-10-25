@@ -91,22 +91,44 @@ const updateUserIntoDB = async (userId: string, files: any, payload: TUser) => {
   return result;
 };
 const getSingleUserDB = async (user: TJwtDecodedUserData) => {
-  const result = await User.findById(user._id);
+  const result = await User.findById(user._id)
+    .populate("following")
+    .populate("followers");
 
   return result;
+};
+const getSingleUserByIdDB = async (userId: string) => {
+  const result = await User.findOne({ userId: userId })
+    .populate("following")
+    .populate("followers");
+
+  return result;
+};
+const getSingleUserByEmailDB = async (email: string) => {
+  const isExistsUser = await User.findOne({ email: email }).select("email name profileImage userId");
+  if (!isExistsUser) {
+    throw new AppError(
+      httpStatus.NOT_FOUND,
+      "userError",
+      "User does not exist."
+    );
+  }
+  return isExistsUser;
 };
 const getAllUsersDB = async (query: Record<string, undefined>) => {
   const nonEQUser = query?.nonEQUser;
   const nonEQUserArray = (nonEQUser as any).toString().split(",");
   const nonEQUserFilterQuery: any = {};
 
-  if (nonEQUserArray.length>0) {
+  if (nonEQUserArray.length > 0) {
     nonEQUserFilterQuery._id = { $nin: nonEQUserArray };
-  } 
-  console.log(nonEQUser, nonEQUserArray, nonEQUserFilterQuery);
+  }
   const searchableFields = ["name", "email", "phone"];
   const mainQuery = new QueryBuilder(
-    User.find(nonEQUserFilterQuery).populate("subscription"),
+    User.find(nonEQUserFilterQuery)
+      .populate("subscription")
+      .populate("following")
+      .populate("followers"),
     query
   ).search(searchableFields);
   const totalPages = (await mainQuery.totalPages()).totalQuery;
@@ -260,7 +282,6 @@ const unFollowUserDB = async (
   user: TJwtDecodedUserData,
   followingUserId: string
 ) => {
-  console.log(followingUserId, user);
   const session = await mongoose.startSession();
   await session.startTransaction();
 
@@ -284,7 +305,6 @@ const unFollowUserDB = async (
       );
     }
 
-    
     const currentUserRes = await User.findByIdAndUpdate(
       user._id,
       { $pull: { following: userToFollow?._id } },
@@ -312,16 +332,49 @@ const unFollowUserDB = async (
     );
   }
 };
+const followBackDB = async (
+  user: TJwtDecodedUserData,
+  followingUserId: string
+) => {
+  if (user._id === followingUserId) {
+    throw new AppError(
+      httpStatus.CONFLICT,
+      "followingError",
+      "You can't follow yourself"
+    );
+  }
+
+  const userToFollow = await User.findById(followingUserId);
+  const currentUser = await User.findById(user._id);
+
+  if (!userToFollow && !currentUser) {
+    throw new AppError(httpStatus.CONFLICT, "followingError", "User not found");
+  }
+
+  const currentUserRes = await User.findByIdAndUpdate(
+    user._id,
+    {
+      $pull: { followers: userToFollow?._id },
+      $push: { following: userToFollow?._id },
+    },
+    { new: true }
+  );
+
+  return currentUserRes?.followers;
+};
 export const UserServices = {
   createUserIntoDB,
   updateUserIntoDB,
+  getSingleUserDB,
+  getSingleUserByIdDB,
   getAllUsersDB,
   updateUserRoleDB,
   isExistsUserIdDB,
   updateUserIdDB,
-  getSingleUserDB,
   updateUserActiveStatusDB,
   followingUserDB,
   getAllUsersForFollowingDB,
-  unFollowUserDB
+  unFollowUserDB,
+  followBackDB,
+  getSingleUserByEmailDB,
 };

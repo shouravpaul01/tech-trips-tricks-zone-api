@@ -33,6 +33,10 @@ const userSchema = new Schema<TUser>(
       required: true,
       unique: true,
     },
+    otp: {
+      type: String,
+      select: 0,
+    },
     role: {
       type: String,
       enum: ["User", "Admin"],
